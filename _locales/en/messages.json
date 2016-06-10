@@ -1,0 +1,9 @@
+{"extName": {
+   "message": "Open In",
+   "description": "Extension name"},
+ "extDesc": {
+   "message": "Open link in specific window",
+   "description": "Extension description"},
+ "openContextMenuTitle": {
+   "message": "Open In...",
+   "description": "context menu button text"}}
