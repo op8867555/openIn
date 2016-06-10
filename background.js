@@ -3,32 +3,26 @@ chrome.contextMenus.onClicked.addListener(function(info, tab) {
   console.log(info);
 });
 
-var freshWindowList = function(f) {
-  return function(currentWinId) {
-    chrome.windows.getAll({populate: true, windowTypes: ['normal']},
-        function(windows) {
-          chrome.contextMenus.removeAll();
-          windows.filter(function(win){
-            return win.id !== currentWinId;
-          }).forEach(function(win, idx) {
-            var nTabs = win.tabs.length;
-            var firstTabTitle = win.tabs[0].title;
-            f(win.id, nTabs, firstTabTitle);
+var freshWindowList = function(currentWinId) {
+  chrome.windows.getAll({populate: true, windowTypes: ['normal']},
+      function(windows) {
+        chrome.contextMenus.removeAll();
+        windows.filter(function(win){
+          return win.id !== currentWinId;
+        }).forEach(function(win, idx) {
+          var nTabs = win.tabs.length;
+          var firstTabTitle = win.tabs[0].title;
+          chrome.contextMenus.create({
+            id: "" + win.id,
+            title: "[" + nTabs + "] " + firstTabTitle + " (" + win.width + "x" + win.height + ")" ,
+            contexts: ['link']
           });
         });
-  };
-};
-
-var onLink = function(winId, nTabs, firstTabTitle) {
-  chrome.contextMenus.create({
-    id: ""+winId,
-    title: "(" + nTabs + ") " + firstTabTitle ,
-    contexts: ['link']
-  });
+      });
 };
 
 
-freshWindowList(onLink);
-chrome.windows.onFocusChanged.addListener(freshWindowList(onLink));
+
+chrome.windows.onFocusChanged.addListener(freshWindowList);
 
 
